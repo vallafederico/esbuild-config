@@ -5,6 +5,13 @@ import { glsl } from "esbuild-plugin-glsl";
 const env = process.env.NODE_ENV;
 const production = env === "production";
 
+// console.log(env, production);
+
+const FILES = {
+  entry: ["app.js"],
+  out: "build/js",
+};
+
 const SETTINGS = {
   bundle: true,
   sourcemap: !production,
@@ -25,13 +32,31 @@ function serveDev() {
       servedir: "dist",
     },
     {
-      entryPoints: ["app.js"],
+      entryPoints: FILES.entry,
       outdir: "dist",
       ...SETTINGS,
       plugins: PLUGINS,
     }
   ).then((server) => {
-    console.log(`DEV ↑`);
+    console.log(`↑DEV ↑`);
+    //   server.stop();
+  });
+}
+
+/* --- DEVELOPMENT */
+function serveFile() {
+  serve(
+    {
+      port: 8000,
+    },
+    {
+      entryPoints: FILES.entry,
+      outfile: "dev.js",
+      ...SETTINGS,
+      plugins: PLUGINS,
+    }
+  ).then((server) => {
+    console.log(`↑FLOW`);
     //   server.stop();
   });
 }
@@ -39,8 +64,8 @@ function serveDev() {
 /* --- BUILD */
 function buildJs() {
   build({
-    entryPoints: ["app.js"],
-    outdir: "build/js",
+    entryPoints: FILES.entry,
+    outdir: FILES.out,
     ...SETTINGS,
     plugins: PLUGINS,
   }).then((stats) => {
@@ -51,4 +76,8 @@ function buildJs() {
 /* ------ Run! */
 if (production) {
   buildJs();
-} else serveDev();
+} else if (env === "dev") {
+  serveDev();
+} else if (env === "flow") {
+  serveFile();
+}
