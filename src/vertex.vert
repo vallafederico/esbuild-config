@@ -1,0 +1,1 @@
+const vec3 salutation = vec3(0., 0., 0.);
