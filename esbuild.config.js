@@ -5,8 +5,6 @@ import { glsl } from "esbuild-plugin-glsl";
 const env = process.env.NODE_ENV;
 const production = env === "production";
 
-// console.log(env, production);
-
 const FILES = {
   entry: ["app.js"],
   out: "build/js",
@@ -76,8 +74,8 @@ function buildJs() {
 /* ------ Run! */
 if (production) {
   buildJs();
-} else if (env === "dev") {
-  serveDev();
 } else if (env === "flow") {
   serveFile();
+} else {
+  serveDev();
 }
